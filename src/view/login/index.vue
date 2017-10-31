@@ -1,5 +1,5 @@
 <template>
-    <div class="form">
+    <!--<div class="form">-->
       
         <!--<el-form ref="form" :model="UserForm" :rules="this.$store.state.userinfo.CheckRules" label-position="left" label-width="180px">
             <el-form-item label="真实姓名" prop="truename">
@@ -18,25 +18,27 @@
                 <el-button type="primary" @click="submitInfo">提交</el-button>
             </el-form-item>
         </el-form>-->
-        <div  class="login">
+
+<!--       
+    <div  class="login">
         <div class="alter">
             <div class="alterLeft">
                 <div class="alterLeftContain">
                     <div class="ipt">
-                        <input type="text" ms-duplex="username" placeholder="请输入手机号"  />
+                        <input type="text" v-model="username" placeholder="请输入手机号" class="ipt1" />
                         <div></div>
                     </div>
                     <div class="ipt">
-                        <input type="password" ms-duplex="password" placeholder="密码"  id="password"/>
+                        <input type="password" v-model="password" placeholder="密码"  id="password" class="ipt1" />
                         <div></div>
                     </div>
                     <div class="ipt">
-                        <input type="text" ms-duplex="yzm" placeholder="验证码" class="yanzheng"   id="passwd"/>
-                        <!--<img ms-src="{{yzmCode}}" @click="reloadcode" class="btn1" />-->
+                        <input type="text" v-model="yzm" placeholder="验证码" class="yanzheng"   id="passwd"/>
+                        <img v-src="yzmCode" @click="reloadcode" class="btn1" />
                         <div></div>
                     </div>
                     <h1>
-                        <!--<input type="checkbox" verification="checkbox" vok="45644" vno="1234">记住密码<span><a href="#!/forget/forget">忘记密码</a></span>-->
+                       
                         <input type="checkbox" name="remember" id="loginRem"/>记住密码<span><a href="#!/forget/forget">忘记密码</a></span>
                         <div></div>
                     </h1>
@@ -49,8 +51,35 @@
             <div class="alterRight"></div>
         </div>
     </div>
-    </div>
+</div>-->
+   
+<div  class="login">
+        <div class="alter">
+            <div class="alterLeft">
 
+<el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container alterLeftContain">
+    
+    <el-form-item prop="account" class="ipt">
+      <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="请输入账号" class="ipt1"></el-input>
+    </el-form-item>
+    <el-form-item prop="checkPass" class="ipt">
+      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="请输入账号密码"></el-input>
+    </el-form-item>
+    <el-form-item prop="checkPass" class="ipt">
+        <input type="text"  v-model="ruleForm2.yzm"  placeholder="验证码" class="yanzheng" auto-complete="off"/>
+        <img :src="yzmCode" @click="reloadcode" class="btn1" />
+        <div></div>
+    </el-form-item>
+    <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+    <el-form-item style="width:100%;" class="ipt">
+      <el-button  class="btn2" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
+      <h2>还没有账号？<a href="#!/register/register">立即注册</a></h2>
+    </el-form-item>
+  </el-form>
+  <div class="alterRight"></div>
+   </div>
+    </div>
+</div>
 </template>
 
 <style>
@@ -58,39 +87,79 @@
 </style>
 
 <script>
-    export default {
-        created(){
-            // this.UserForm = this.$store.state.userinfo.UserForm;
+  import { requestLogin,yzimage } from '../../api/api';
+export default {
+    data() {
+      return {
+        logining: false,
+        yzmCode:"",
+        ruleForm2: {
+          account: '',
+          checkPass: ''
         },
-
-        beforeDestory(){
-            // this.$store.state.userinfo.UserForm=this.UserForm;
+        rules2: {
+          account: [
+            { required: true, message: '请输入账号', trigger: 'blur' },
+            //{ validator: validaePass }
+          ],
+          checkPass: [
+            { required: true, message: '请输入密码', trigger: 'blur' },
+            //{ validator: validaePass2 }
+          ]
         },
-
-        data() {
-            return {
-                UserForm: {
-                    truename: '',
-                    age: '',
-                    birthday: ''
-                }
-            };
-        },
-
-        methods:{
-            submitInfo(){
-                // 表单验证方法
-                this.$refs.form.validate(function (result) {
-                    if(result){
-                        // 验证通过,调用module里的setUserInfo方法
-                        this.$store.dispatch("setUserInfo");
-                    }else{
-                        alert("表达验证不合法")
-                    }
-                }.bind(this));
-            }
-        },
+        checked: true
+      };
+    },
+    mounted() {
+        this.reloadcode();
+    },
+    methods: {
+      handleReset2() {
+        this.$refs.ruleForm2.resetFields();
+      },
+      reloadcode(){
+       
+        let para = {
+					uuid:'NyM66J3xB5qGY7HQ',
+					m:Math.random()
+				};
+        yzimage().then((res) => {
+					console.log(res)
+                    this.yzmCode ='http://dingzhi.diyuapp.com/freeweb/api/yzimage?uuid=NyM66J3xB5qGY7HQ&m=0.019600493055879742'
+				});
+		// return config.url + 'api/yzimage?uuid=' + uuidcode + "&m=" + Math.random();
+      },
+      handleSubmit2(ev) {
+        var _this = this;
+        this.$refs.ruleForm2.validate((valid) => {
+          if (valid) {
+            //_this.$router.replace('/table');
+            this.logining = true;
+            //NProgress.start();
+            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
+            requestLogin(loginParams).then(data => {
+              this.logining = false;
+              //NProgress.done();
+              let { msg, code, user } = data;
+              if (code !== 200) {
+                this.$message({
+                  message: msg,
+                  type: 'error'
+                });
+              } else {
+                sessionStorage.setItem('user', JSON.stringify(user));
+                this.$router.push({ path: '/table' });
+              }
+            });
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      }
     }
+  }
+
 </script>
 <style lang="scss" scoped>
 body{
@@ -178,6 +247,8 @@ body{
                             position: relative;
                             margin-top: 30px;
                             color: #064f97;
+                            clear: both;
+                            width: 100%;
                             input {
                                 cursor: pointer;
                                 margin-right: 10px;
