@@ -4,8 +4,9 @@
     <div class="w1000">
       <h1><a href="#!/home/home">企企科技</a></h1>
       <div class="header_right">
-         <a href="#!/login/login" class="login" id="index4">登录</a>
-    	  <a href="#!/register/register" id="index5">注册</a> 
+         <!--<a href="#!/login/login" class="login" id="index4">登录</a>-->
+         <router-link :to="{ path:'/login' }" class="login" id="index4">登录</router-link>
+    					<a href="#!/register/register" id="index5">注册</a> 
       </div>
       <ul class="navList">
         <li>
@@ -30,11 +31,11 @@
       <p>企企科技 diyuapp.com 沪ICP备15056324号</p>
     </div>
   </footer>
- <div  id="wrap">
+ <div id="wrap">
    <div id="main">
      <section class="section-wrap" >
-       <div class="section section-1">
-         <div style="height: 100%;">
+       <div class="section section-1" >
+         <div style="height:100%">
            <div class="w1000">
              <div class="first_mengban">
                <p class="single">
@@ -55,7 +56,7 @@
            <div class="circle current"></div>
          </div>
        </div>
-       <div class="section section-2">
+       <div class="section section-2" >
          <div class="title1">
            <div class="w1000">
              <div class="two_slogan" id="_img3"></div>
@@ -76,7 +77,7 @@
            </div>
          </div>
        </div>
-       <div class="section section-3" >
+       <div class="section section-3">
          <div class="title1">
            <div class="w1000">
              <div class="three_slogan" id="_img4"></div>
@@ -101,7 +102,7 @@
            </div>
          </div>
        </div>
-       <div class="section section-4">
+       <div class="section section-4" >
          <div class="title1">
            <div class="w1000">
              <div class="four_slogan" id="_img5"></div>
@@ -125,7 +126,7 @@
            </div>
          </div>
        </div>
-       <div class="section section-5">
+       <div class="section section-5" >
          <div class="w1000">
            <ul class="list">
              <li>
@@ -227,8 +228,9 @@
          </div>
        </div>
      </section>
-
+     <!--<div class="arrow"></div>-->
    </div>
+     <div class="arrow"></div>
  </div>
 
 </div>
@@ -242,19 +244,21 @@ export default {
       startTime:0,
       endTime:0,
       now:0
-      
+
     }
   },
   methods: {
     isScroll() {
       let wrap = document.getElementById("wrap");
-      let hei = document.documentElement.clientHeight;
-       wrap.style.height = hei + "px";
-      let obj = document.getElementsByTagName("div");
+      let main = document.getElementById("main");
+      var hei = document.documentElement.clientHeight;
+      wrap.style.height = hei + "px";
+    //   let obj = main.getElementsByTagName("div");
+     let obj = document.getElementsByClassName("section");
       for (var i = 0; i < obj.length; i++) {
-        if (obj[i].className == 'section') {
+        // if (obj[i].className && obj[i].className == 'section') {
           obj[i].style.height = hei + "px";
-        }
+        // }
       }
       //如果不加时间控制，滚动会过度灵敏，一次翻好几屏
 
@@ -272,12 +276,12 @@ export default {
     //滚动事件处理函数
     scrollFun(event) {
      this.startTime = new Date().getTime();
-     var hei = document.body.clientHeight;
+     var hei = document.documentElement.clientHeight;
       var delta = event.detail || (-event.wheelDelta);
       //mousewheel事件中的 “event.wheelDelta” 属性值：返回的如果是正值说明滚轮是向上滚动
       //DOMMouseScroll事件中的 “event.detail” 属性值：返回的如果是负值说明滚轮是向上滚动
       if ((this.endTime - this.startTime) < -1000) {
-        if (delta > 0 && parseInt(main.offsetTop) > -(hei * 5)) {
+        if (delta > 0 && parseInt(main.offsetTop) > -(hei * 3)) {
           //向下滚动
 
           this.now = this.now - hei;
@@ -298,7 +302,55 @@ export default {
       // $("#main").animate({
       //   top: (now + 'px')
       // }, 1000); //jquery实现动画效果
-      setTimeout("main.style.top = this.now + 'px'",1000);     //javascript 实现动画效果
+      let main = document.getElementById("main");
+      console.log(this.now);
+
+      $('.section').find('.circle').removeClass('current');
+        $('.three_img1').removeClass('current');
+        $('.three_img3').removeClass('current');
+        $('.light').removeClass('current');
+        $('.four_img2').removeClass('current');
+        $('.four_img4').removeClass('current');
+        $('.imgArrow').removeClass('current');
+        $('.free').removeClass('current');
+        $('.two_img1,.two_img2,.two_img3,.two_img4').css('display', 'none');
+        $('.wai').css('top', '-1000px');
+        $('.inner').css('left', '9000px');
+        $('footer').css('display', 'none');
+        $('.arrow').show();
+
+      main.style.top = this.now + 'px';
+      
+      console.log(this.now/document.documentElement.clientHeight);
+      let i =this.now/document.documentElement.clientHeight;
+      switch(this.now/document.documentElement.clientHeight) {
+            case 0:
+                $('footer').css('display', 'none');
+                $('.section').find('.circle').addClass('current');
+                $('.free').addClass('current');
+                break;
+            case -1:
+                $('.two_slogan').addClass('current');
+                $('.two_img1').fadeIn('300', function() {
+                    $('.two_img2').fadeIn('300', function() {
+                        $('.two_img3').fadeIn('300', function() {
+                            $('.two_img4').fadeIn('300');
+                        });
+                    });
+                });
+                break;
+            case -2:
+                $('.three_img1').addClass('current');
+                $('.three_img3').addClass('current');
+                $('.light').addClass('current');
+                break;
+            case -3:
+                $('.four_img2').addClass('current');
+                $('.four_img4').addClass('current');
+                $('.imgArrow').addClass('current');
+                break;
+            
+        }
 
     }
 
@@ -326,7 +378,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
     width:100%;
 }
 #main{
-    height:2294px;
+    height:4449px;
     top:0;
     position: relative;
 }
@@ -915,7 +967,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
 
     .two_img {
         margin: 0 auto;
-        background-image: url("../assets/img/head//change_area.png");
+        background-image: url("../assets/img/head/change_area.png");
         width: 255px;
         height: 435px;
         padding-top: 90px;
@@ -931,31 +983,31 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
     }
 
     .two_img1 {
-        background-image: url("../assets/img/head//phone_1.png");
+        background-image: url("../assets/img/head/phone_1.png");
         height: 36px;
         margin: 0 auto 20px;
     }
 
     .two_img2 {
-        background-image: url("../assets/img/head//phone_2.png");
+        background-image: url("../assets/img/head/phone_2.png");
         height: 74px;
         margin: 0 auto 20px;
     }
 
     .home .two_img3 {
-        background-image: url("../assets/img/head//phone_3.png");
+        background-image: url("../assets/img/head/phone_3.png");
         height: 36px;
         margin: 0 auto 20px;
     }
 
     .two_img4 {
-        background-image: url("../assets/img/head//phone_4.png");
+        background-image: url("../assets/img/head/phone_4.png");
         height: 76px;
         margin: 0 auto;
     }
 
     .three_slogan {
-        background-image: url("../assets/img/head//slogan.png");
+        background-image: url("../assets/img/head/slogan.png");
         width: 350px;
         height: 121px;
         margin: 10% auto 0;
@@ -980,7 +1032,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
         position: relative;
     }
     .three_img1 {
-        background-image: url("../assets/img/head//juhe_l.png");
+        background-image: url("../assets/img/head/juhe_l.png");
         width: 172px;
         height: 192px;
         position: absolute;
@@ -1043,7 +1095,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
         }
     }
     .three_img2 {
-        background-image: url("../assets/img/head//imac.png");
+        background-image: url("../assets/img/head/imac.png");
         width: 400px;
         height: 334px;
         position: absolute;
@@ -1061,7 +1113,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
         position: relative;
     }
     .three_img3 {
-        background-image: url("../assets/img/head//juhe_r.png");
+        background-image: url("../assets/img/head/juhe_r.png");
         width: 167px;
         height: 236px;
         position: absolute;
@@ -1120,7 +1172,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
         }
     }
     .light {
-        background-image: url("../assets/img/head//light.png");
+        background-image: url("../assets/img/head/light.png");
         width: 65px;
         height: 68px;
         position: absolute;
@@ -1192,7 +1244,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
     }
 
     .four_slogan {
-        background-image: url("../assets/img/head//slogan2.png");
+        background-image: url("../assets/img/head/slogan2.png");
         width: 350px;
         height: 121px;
         margin: 10% auto 0;
@@ -1208,7 +1260,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
     }
     .four_img1 {
         position: absolute;
-        background-image: url("../assets/img/head//4phone.png");
+        background-image: url("../assets/img/head/4phone.png");
         width: 255px;
         height: 437px;
         top: 0;
@@ -1216,7 +1268,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
     }
     .four_img2 {
         position: absolute;
-        background-image: url("../assets/img/head//4phone_t.png");
+        background-image: url("../assets/img/head/4phone_t.png");
         width: 178px;
         height: 309px;
         top: -90px;
@@ -1275,7 +1327,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
     }
     .four_img3 {
         position: absolute;
-        background-image: url("../assets/img/head//mac_bg.png");
+        background-image: url("../assets/img/head/mac_bg.png");
         width: 429px;
         height: 275px;
         right: 0;
@@ -1283,7 +1335,7 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
     }
     .four_img4 {
         position: absolute;
-        background-image: url("../assets/img/head//mac_t.png");
+        background-image: url("../assets/img/head/mac_t.png");
         width: 291px;
         height: 165px;
         top: -90px;
@@ -1342,10 +1394,10 @@ body,ul,li,a,p,div{padding:0px; margin:0px; font-size:14px;}
     }
     .imgArrow {
         position: absolute;
-        background-image: url("../assets/img/head//feiji.png");
+        background-image: url("../assets/img/head/feiji.png");
         width: 90px;
         height: 70px;
-        top: 25px;
+        /*top: 25px;*/
         left: 255px;
         opacity: 0;
     }
