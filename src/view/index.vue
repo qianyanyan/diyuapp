@@ -6,7 +6,8 @@
       <div class="header_right">
          <!--<a href="#!/login/login" class="login" id="index4">登录</a>-->
          <router-link :to="{ path:'/login' }" class="login" id="index4">登录</router-link>
-    					<a href="#!/register/register" id="index5">注册</a> 
+        <router-link :to="{ path:'/register' }" class="login" id="index5">注册</router-link>
+    					<!--<a href="#!/register/register" id="index5">注册</a> -->
       </div>
       <ul class="navList">
         <li>
