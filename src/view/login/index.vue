@@ -40,8 +40,30 @@ import {
   yzimage
 } from '../../api/api';
 import global from '../../assets/js/Math.uuid'
+import { isTell , isPassword , isCode } from '../../assets/js/validate';
 export default {
   data() {
+      const validateTell = (rule, value, callback) => {
+        if (!isTell(value)) {
+          callback(new Error('请输入正确的手机号码'));
+        } else {
+          callback();
+        }
+      };
+      const validatePass = (rule, value, callback) => {
+        if (!isPassword(value)) {
+          callback(new Error('密码为6-16位数'));
+        } else {
+          callback();
+        }
+      };
+      const validateCode = (rule, value, callback) => {
+        if (!isPassword(value)) {
+          callback(new Error('密码为6-16位数'));
+        } else {
+          callback();
+        }
+      };
     return {
       logining: false,
       yzmCode: "",
@@ -52,21 +74,21 @@ export default {
       },
       rules2: {
         account: [{
-            required: true,
-            message: '请输入账号',
-            trigger: 'blur'
+            required: true,trigger: 'blur', validator: validateTell
           },
-          //{ validator: validaePass }
         ],
         checkPass: [{
-            required: true,
-            message: '请输入密码',
-            trigger: 'blur'
+            required: true,trigger: 'blur',validator: validatePass
           },
-          //{ validator: validaePass2 }
+        ],
+        zym: [{
+          required: true,trigger: 'blur',validator: validateCode
+        },
         ]
       },
-      checked: true
+      checked: true,
+      loading: false,
+      showDialog: false
     };
   },
   mounted() {
@@ -78,6 +100,7 @@ export default {
     },
     reloadcode() {
       let uuidcode = global.uuid(16);
+     sessionStorage.setItem("uuid", uuidcode);
       yzimage().then((res) => {
         // this.yzmCode ='http://dingzhi.diyuapp.com/freeweb/api/yzimage?uuid=NyM66J3xB5qGY7HQ&m=0.019600493055879742'
         this.yzmCode = 'http://dingzhi.diyuapp.com/freeweb/api/yzimage?uuid=' + uuidcode + "&m=" + Math.random();
@@ -92,7 +115,8 @@ export default {
           var loginParams = {
             username: this.ruleForm2.account,
             password: this.ruleForm2.checkPass,
-            yzm: this.ruleForm2.yzm
+            yzm: this.ruleForm2.yzm,
+            uuid : sessionStorage.getItem('uuid')
           };
           requestLogin(loginParams).then(data => {
             this.logining = false;
