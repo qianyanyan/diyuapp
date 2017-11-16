@@ -82,7 +82,7 @@ export default {
         zym: [{
           required: true,trigger: 'blur',validator: validateCode
         },
-        ]
+        ],
         code:[{
             required: true,
             message: '请输入验证码',
