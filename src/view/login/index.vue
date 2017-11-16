@@ -2,9 +2,7 @@
 <div class="login">
   <div class="alter">
     <div class="alterLeft">
-
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container alterLeftContain">
-
         <el-form-item prop="account" class="ipt">
           <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="请输入账号" id="ipt1" style="border:none;"></el-input>
         </el-form-item>
@@ -19,7 +17,7 @@
         <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
         <el-form-item style="width:100%;" class="ipt">
           <el-button class="btn2" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
-          <h2>还没有账号？<a href="#!/register/register">立即注册</a></h2>
+          <h2>还没有账号？ <router-link :to="{ path:'/register' }">立即注册</router-link></h2>
         </el-form-item>
       </el-form>
       <div class="alterRight"></div>
@@ -85,6 +83,12 @@ export default {
           required: true,trigger: 'blur',validator: validateCode
         },
         ]
+        code:[{
+            required: true,
+            message: '请输入验证码',
+            trigger: 'blur'
+        }]
+
       },
       checked: true,
       loading: false,
